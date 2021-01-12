@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #menu #links text {
+            /* salignment-baseline: middle; */
+            text-anchor: middle;
+            transition: font-size 0.5s, fill 0.5s;
+            font-size: 200%;
+        }
+        #menu #links text:hover {
+            fill: blue;
+            font-size: 220%;
+            cursor: pointer;
+        }
+        #main {
+            background-color: #505050;
+        }
+        
+        #car .body {
+            fill:yellow;stroke:gray;stroke-width:2
+        }
+        #car .will {
+            fill: #333
+        }
+
+
+        #road-markings line {
+            stroke: white;
+            stroke-width: 10;
+            animation: road-run  1s infinite linear;
+        }
+
+        @keyframes road-run {
+            from {stroke-dasharray:40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40;}
+            50% {stroke-dasharray:0 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40;}
+            to {stroke-dasharray:0 0 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40 40;}
+        }
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <svg id="main" viewBox="0 0 640 320" style="border:1px solid black">
+          
+          <g id="game">
+            <g id="road-markings">
+                <line x1="0" y1="33%" x2="100%" y2="33%" />
+                <line x1="0" y1="66%" x2="100%" y2="66%" />
+            </g>
+            
+            <svg id="car" x="10" y="37%">
+                <ellipse class="body" id="test" cx="60" cy="40" rx="50" ry="30" />
+                <ellipse class="will" cx="30" cy="10" rx="15" ry="10" />
+                <ellipse class="will" cx="90" cy="10" rx="15" ry="10" />
+                <ellipse class="will" cx="30" cy="70" rx="15" ry="10" />
+                <ellipse class="will" cx="90" cy="70" rx="15" ry="10" />
+                <ellipse class="glass" cx="70" cy="40" rx="15" ry="20" />
+            </svg>
+            
+          </g>
+          <g id="menu">
+            <text id="map_text" x="0" y="15" fill="red">Mai1sdasdn menu</text>
+            <rect x="40%" y="15%" width="20%" height="70%" fill="yellow" opacity="30%" />
+            <g id="links">
+                <text x="50%" y="30%">Start</text>
+                <text x="50%" y="50%">Score</text>
+                <text x="50%" y="70%">Reset</text>
+            </g>
+          </g>
+        </svg>
+    </div>
+<script>
+    const car_el = document.getElementById('car');
+    let car = {
+        body: document.getElementById('car'),
+        position_arr: [ 5, 37, 69 ],
+        position_cur: 1,
+        getPosition: function() {return position_arr[position_cur]},
+        getKey: function(e) {
+            if (e.key == "ArrowDown") {
+                car.turnDown();
+            }
+            if (e.key == "ArrowUp") {
+                car.turnUp();
+            }
+        },
+        getTouch: function(e) {
+            console.log(e);
+            if (e.clientX>window.innerWidth/3*2) {
+                console.log(window.innerHeight/2);
+                console.log(e.clientY);
+                if (e.clientY>window.innerHeight/2) {
+                    car.turnDown();
+                }
+                else {
+                    car.turnUp();
+                }
+            }
+        },
+        turnUp: function() { 
+            this.position_cur = this.position_cur>0 ? this.position_cur-1 : 0;
+            this.draw();
+        },
+        turnDown: function() {
+            this.position_cur = this.position_cur<this.position_arr.length-1 ? this.position_cur+1 : this.position_arr.length-1;
+            this.draw();
+        },
+        draw: function() { this.body.setAttribute('y',''+this.position_arr[this.position_cur]+'%'); }
+    }
+
+    document.addEventListener('keydown', car.getKey);
+    document.addEventListener('mousedown', car.getTouch);
+
+    car.draw()
+</script>
+</body>
+</html>
